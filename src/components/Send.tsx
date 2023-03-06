@@ -1,7 +1,7 @@
 import { chains, useNetwork } from '@/hooks/use-network';
 import { ViewNames } from '@/pages';
 import styles from '@/styles/Home.module.css';
-import { utils } from 'ethers';
+import { parseEther } from 'ethers';
 import { useState } from 'react';
 import { useFeeData } from '../hooks/use-fee-data';
 import { useNonce } from '../hooks/use-nonce';
@@ -29,7 +29,7 @@ export const Send: React.FunctionComponent<
     to: toAddress,
     privateKey,
     chainId: chain.chain_id,
-    value: utils.parseEther(etherAmount.toString()),
+    value: parseEther(etherAmount.toString()),
     feeData,
   });
   return (

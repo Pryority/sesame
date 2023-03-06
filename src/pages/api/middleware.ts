@@ -1,9 +1,9 @@
-import { providers } from 'ethers';
+import { JsonRpcProvider } from 'ethers';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ChainId } from '../../hooks/use-network';
 import { providersByChainId } from './../../hooks/use-balance';
 
-const pickProvider = (chainId: ChainId): providers.JsonRpcProvider => {
+const pickProvider = (chainId: ChainId): JsonRpcProvider => {
   return providersByChainId[chainId];
 };
 const handler = async (req: NextApiRequest, res: NextApiResponse<boolean>) => {
@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<boolean>) => {
   const provider = pickProvider(Number(chainId) as ChainId);
 
   const transactionResponse = await provider
-    .sendTransaction(signedTxn)
+    .broadcastTransaction(signedTxn)
     .then((res) => {
       console.log(res);
       return res;

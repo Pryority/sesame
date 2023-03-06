@@ -1,6 +1,6 @@
 import { useIsOnline } from '@/hooks/use-is-online';
 import { useWallet } from '@/hooks/use-wallet';
-import { ethers, providers } from 'ethers';
+import { formatEther, JsonRpcProvider } from 'ethers';
 import { useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { useEffect } from 'react';
@@ -19,17 +19,17 @@ const balancesAtom = atomWithStorage<{ [network: string]: number }>(
 );
 
 export const providersByChainId = chains.reduce<
-  Record<ChainId, providers.JsonRpcProvider>
+  Record<ChainId, JsonRpcProvider>
 >((acc, chain) => {
-  acc[chain.chain_id] = new providers.JsonRpcProvider(chain.rpcUrls[0]);
+  acc[chain.chain_id] = new JsonRpcProvider(chain.rpcUrls[0]);
   return acc;
-}, {} as Record<ChainId, providers.JsonRpcProvider>);
+}, {} as Record<ChainId, JsonRpcProvider>);
 export const providersByChainName = chains.reduce<
-  Record<ChainName, providers.JsonRpcProvider>
+  Record<ChainName, JsonRpcProvider>
 >((acc, chain) => {
-  acc[chain.name] = new providers.JsonRpcProvider(chain.rpcUrls[0]);
+  acc[chain.name] = new JsonRpcProvider(chain.rpcUrls[0]);
   return acc;
-}, {} as Record<ChainName, providers.JsonRpcProvider>);
+}, {} as Record<ChainName, JsonRpcProvider>);
 
 export const useBalance = (network: ChainName): number => {
   const [balance, setBalance] = useAtom(balancesAtom);
@@ -40,7 +40,7 @@ export const useBalance = (network: ChainName): number => {
     return providersByChainName[network].getBalance(address).then((bal) => {
       setBalance((oldBalance) => ({
         ...oldBalance,
-        [network]: Number(ethers.utils.formatEther(bal)),
+        [network]: Number(formatEther(bal)),
       }));
     });
   };

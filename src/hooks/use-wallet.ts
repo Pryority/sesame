@@ -8,21 +8,19 @@ function makeWallet(): WalletData {
   return {
     address: wallet.address,
     privateKey: wallet.privateKey,
-    mnemonic: wallet.mnemonic,
+    // mnemonic: wallet.mnemonic,
   };
 }
 const WALLET_DATA_KEY = 'sesame-wallet-data';
 interface WalletData {
   address: string;
   privateKey: string;
-  mnemonic: ethers.utils.Mnemonic;
+  // mnemonic: Mnemonic;
 }
 export const useWallet = (password = DEFAULT_PASSWORD) => {
   const [address, setAddress] = useState<string>('');
   const [privateKey, setPrivateKey] = useState<string>('');
-  const [mnemonic, setMnemonic] = useState<ethers.utils.Mnemonic>(
-    {} as ethers.utils.Mnemonic,
-  );
+  // const [mnemonic, setMnemonic] = useState<Mnemonic>({} as Mnemonic);
 
   useEffect(() => {
     const storedData = localStorage.getItem(WALLET_DATA_KEY);
@@ -34,7 +32,7 @@ export const useWallet = (password = DEFAULT_PASSWORD) => {
 
       setAddress(decodedWalletData.address);
       setPrivateKey(decodedWalletData.privateKey);
-      setMnemonic(decodedWalletData.mnemonic);
+      // setMnemonic(decodedWalletData.mnemonic);
     } else {
       const walletData = makeWallet();
       const encryptedData = CryptoJS.AES.encrypt(
@@ -44,13 +42,13 @@ export const useWallet = (password = DEFAULT_PASSWORD) => {
       localStorage.setItem(WALLET_DATA_KEY, encryptedData);
       setAddress(walletData.address);
       setPrivateKey(walletData.privateKey);
-      setMnemonic(walletData.mnemonic);
+      // setMnemonic(walletData.mnemonic);
     }
   }, []);
 
   return {
     address,
     privateKey,
-    mnemonic,
+    // mnemonic,
   };
 };

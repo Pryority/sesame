@@ -1,4 +1,4 @@
-import { isAddress } from 'ethers/lib/utils';
+import { isAddress } from 'ethers';
 import { useEffect, useState } from 'react';
 import { SignTransactionArgs } from '../utils/helpers';
 import { signTransaction } from './../utils/helpers';
@@ -9,7 +9,7 @@ export const useSignedTxn = (args: SignTransactionArgs): string => {
     if (
       !isAddress(args.to) ||
       !args.feeData?.['maxPriorityFeePerGas'] ||
-      args.value.eq(0)
+      args.value === 0
     ) {
       return;
     }

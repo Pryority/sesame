@@ -39,7 +39,7 @@ export const chains = [
     chain_id: 80001,
     name: 'polygon-mumbai',
     label: 'Polygon Mumbai',
-    symbol: 'Mumbia MATIC',
+    symbol: 'Mumbai MATIC',
     logo_url:
       'https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912',
     rpcUrls: [
