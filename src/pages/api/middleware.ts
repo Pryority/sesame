@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from 'ethers';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { providersByChainId } from '../../hooks/use-balance';
 import { ChainId } from '../../hooks/use-network';
-import { providersByChainId } from './../../hooks/use-balance';
 
 const pickProvider = (chainId: ChainId): JsonRpcProvider => {
   return providersByChainId[chainId];
