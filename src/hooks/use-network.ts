@@ -6,6 +6,7 @@ export const chains = [
     name: 'mainnet',
     label: 'Mainnet',
     symbol: 'ETH',
+    block_explorer: 'https://etherscan.io/',
     logo_url:
       'https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880',
     rpcUrls: ['https://eth.llamarpc.com'],
@@ -15,6 +16,7 @@ export const chains = [
     name: 'goerli',
     label: 'Goerli',
     symbol: 'GETH',
+    block_explorer: 'https://goerli.etherscan.io/',
     logo_url:
       'https://assets.coingecko.com/coins/images/29217/small/goerli-eth.png',
     rpcUrls: [
@@ -27,6 +29,7 @@ export const chains = [
     name: 'polygon',
     label: 'Polygon',
     symbol: 'MATIC',
+    block_explorer: 'https://polygonscan.com/',
     logo_url:
       'https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912',
     rpcUrls: [
@@ -40,6 +43,7 @@ export const chains = [
     name: 'polygon-mumbai',
     label: 'Polygon Mumbai',
     symbol: 'Mumbai MATIC',
+    block_explorer: 'https://mumbai.polygonscan.com/',
     logo_url:
       'https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912',
     rpcUrls: [
@@ -53,6 +57,7 @@ export const chains = [
     name: 'optimism',
     label: 'Optimism',
     symbol: 'Optimism ETH',
+    block_explorer: 'https://optimistic.etherscan.io/',
     logo_url:
       'https://assets.coingecko.com/coins/images/25244/small/Optimism.png',
     rpcUrls: [
@@ -65,6 +70,7 @@ export const chains = [
     name: 'arbitrum',
     label: 'Arbitrum',
     symbol: 'Arbitrum ETH',
+    block_explorer: 'https://arbiscan.io/',
     logo_url:
       'https://assets.coingecko.com/nft_contracts/images/1822/small/https-fanbase-1-s3-amazonaws-com-quixotic-collection-profile-046qixwt_400x400-jpeg.jpg',
     rpcUrls: [
@@ -77,6 +83,7 @@ export const chains = [
     name: 'binance-smart-chain',
     label: 'Binance Smart Chain',
     symbol: 'BNB',
+    block_explorer: 'https://bscscan.com/',
     logo_url:
       'https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png?1547034615',
     rpcUrls: [

@@ -1,6 +1,7 @@
 import { ViewNames } from '@/pages';
 import styles from '@/styles/Home.module.css';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import { useBalance } from '../hooks/use-balance';
 import { ChainName, chains } from '../hooks/use-network';
@@ -34,6 +35,7 @@ interface BalanceCardProps {
     networkName: ChainName;
     currency_name: string;
     currency_img_url: string;
+    block_explorer: string;
   };
 }
 
@@ -45,13 +47,15 @@ export const BalanceCard: React.FunctionComponent<
   return (
     <div className={styles.balance_card}>
       <div className={styles.align_center}>
-        <Image
-          src={data.currency_img_url}
-          width={40}
-          height={40}
-          alt={data.currency_name + 'img'}
-          className={styles.avatar}
-        />
+        <Link href={data.block_explorer} target="_blank">
+          <Image
+            src={data.currency_img_url}
+            width={40}
+            height={40}
+            alt={data.currency_name + 'img'}
+            className={styles.avatar}
+          />
+        </Link>
       </div>
       <div style={{ paddingLeft: 10, textAlign: 'right' }}>
         <h2>{Math.floor(balance * 10 ** 12) / 10 ** 12}</h2>
@@ -80,6 +84,7 @@ export const Overview: React.FunctionComponent<
               networkName: chain.name,
               currency_name: chain.symbol,
               currency_img_url: chain.logo_url,
+              block_explorer: chain.block_explorer,
             }}
           />
         );
