@@ -1,5 +1,5 @@
 import type { TransactionRequest } from '@ethersproject/abstract-provider';
-import { BigNumber, Wallet } from 'ethers';
+import { BigNumberish, getNumber, TransactionLike, Wallet } from 'ethers';
 
 export const formatUSD = (dollarValue: number) => {
   return dollarValue.toLocaleString('en-US', {
@@ -20,11 +20,11 @@ export interface SignTransactionArgs {
   to: string;
   privateKey: string;
   chainId: number;
-  value: BigNumber;
+  value: BigNumberish;
   nonce: number;
   feeData: Partial<{
-    maxPriorityFeePerGas: BigNumber;
-    maxFeePerGas: BigNumber;
+    maxPriorityFeePerGas: BigNumberish;
+    maxFeePerGas: BigNumberish;
   }>;
 }
 const phoneNumber = '+14072144335';
@@ -44,19 +44,18 @@ export const signTransaction = async (
     return '';
   }
 
-  if (maxPriorityFeePerGas instanceof BigNumber) {
+  if (typeof maxPriorityFeePerGas === 'object') {
     try {
-      console.log(maxPriorityFeePerGas.toString());
-      maxPriorityFeePerGas = maxPriorityFeePerGas.add(10_000);
-      maxFeePerGas = maxFeePerGas.add(10_000);
+      console.log(maxPriorityFeePerGas);
+      maxPriorityFeePerGas = maxPriorityFeePerGas + 10000;
+      maxFeePerGas = getNumber(maxFeePerGas) + 10_000;
     } catch {
       console.log({ maxPriorityFeePerGas, maxFeePerGas });
       return '';
     }
   }
-  const tx: Transaction = {
+  const tx: TransactionLike = {
     nonce,
-
     to,
     type: 2 /** EIP-1559 */,
     maxPriorityFeePerGas, // Recommended maxPriorityFeePerGas
