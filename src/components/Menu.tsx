@@ -53,42 +53,31 @@ export const Reveal: React.FunctionComponent<
   React.PropsWithChildren<RevealProps>
 > = (props) => {
   const { revealViewOption, setRevealViewOption } = props;
-  const { privateKey, mnemonic } = useWallet();
-  console.log({ privateKey, mnemonic, revealViewOption });
-
-  const title =
-    revealViewOption === 'seedPhrase'
-      ? 'Secret Recovery Phrase'
-      : 'Private Keys';
-
-  const copyText =
-    revealViewOption === 'seedPhrase' ? mnemonic?.phrase : privateKey;
+  const { privateKey } = useWallet();
+  console.log({ privateKey, revealViewOption });
 
   return (
     <>
-      <BackTitle title={title} onBack={() => setRevealViewOption('overview')} />
+      <BackTitle
+        title={'Private Keys'}
+        onBack={() => setRevealViewOption('overview')}
+      />
       <div style={{ height: 15 }} />
       <div className={styles.reveal_options_card}>
         <Copy
-          copyText={copyText}
+          copyText={privateKey}
           copyButtonStyles={`${styles.button_transparent}`}
         >
           <div
             className={`${styles.flex}`}
             style={{ width: '100%', alignItems: 'flex-start' }}
           >
-            {revealViewOption === 'seedPhrase' ? (
-              <>
-                <p style={{ textAlign: 'start' }}>{mnemonic?.phrase}</p>
-              </>
-            ) : (
-              <>
-                <div style={{ width: '92%' }}>
-                  <p style={{ textAlign: 'start' }}>{privateKey}</p>
-                </div>
-                <div style={{ width: 10 }} />
-              </>
-            )}
+            <>
+              <div style={{ width: '92%' }}>
+                <p style={{ textAlign: 'start' }}>{privateKey}</p>
+              </div>
+              <div style={{ width: 10 }} />
+            </>
             <div style={{ width: 5 }} />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -168,15 +157,6 @@ export const Menu: React.FunctionComponent<
     <div style={{ padding: 10 }}>
       {revealViewOption === 'overview' ? (
         <>
-          <RevealCard
-            revealViewOption={'seedPhrase'}
-            setRevealViewOption={setRevealViewOption}
-            title={'Reveal Secret Recovery Phrase'}
-            message={
-              'If you ever change browsers or move computers you will need this Secret Recovery Phrase to access your accounts. Save them somewhere safe and secret.'
-            }
-          />
-          <div style={{ height: 20 }} />
           <RevealCard
             revealViewOption={'privateKey'}
             setRevealViewOption={setRevealViewOption}
