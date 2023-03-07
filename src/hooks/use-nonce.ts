@@ -20,7 +20,7 @@ export const useNonce = () => {
   const incrementNonce = () =>
     setNonces((oldNonce) => ({
       ...oldNonce,
-      [chain.name]: oldNonce[chain.name] + 1,
+      [chain.chain_id]: oldNonce[chain.chain_id] + 1,
     }));
 
   useEffect(() => {
@@ -32,13 +32,13 @@ export const useNonce = () => {
         .then((newNonce) => {
           setNonces((oldNonce) => ({
             ...oldNonce,
-            [chain.name]: newNonce,
+            [chain.chain_id]: newNonce,
           }));
         })
         .catch(() => {});
     }, 3000);
 
     return () => clearInterval(intervalId);
-  }, [chain.name, address, isOnline]);
-  return { nonce: nonces[chain.name], incrementNonce };
+  }, [chain.chain_id, address, isOnline]);
+  return { nonce: nonces[chain.chain_id], incrementNonce };
 };
