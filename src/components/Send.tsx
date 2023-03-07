@@ -1,7 +1,6 @@
 import { chains, useNetwork } from '@/hooks/use-network';
 import { ViewNames } from '@/pages';
 import styles from '@/styles/Home.module.css';
-import { parseEther } from 'ethers';
 import { useState } from 'react';
 import { useFeeData } from '../hooks/use-fee-data';
 import { useNonce } from '../hooks/use-nonce';
@@ -9,16 +8,16 @@ import { useSignedTxn } from '../hooks/use-signed-txn';
 import { useWallet } from '../hooks/use-wallet';
 import { BackTitle } from './Menu';
 
-interface SendeProps {
+interface SendProps {
   setCurrentView: React.Dispatch<React.SetStateAction<ViewNames>>;
 }
 
 export const Send: React.FunctionComponent<
-  React.PropsWithChildren<SendeProps>
+  React.PropsWithChildren<SendProps>
 > = (props) => {
   const { chain, setChain } = useNetwork();
   const [toAddress, setToAddress] = useState<string>('');
-  const [etherAmount, setEtherAmount] = useState<string>('0');
+  const [ether, setEther] = useState<number>(0);
   const [showDropDown, setShowDropDown] = useState<boolean>();
   const { setCurrentView } = props;
   const { address, privateKey } = useWallet();
@@ -29,9 +28,10 @@ export const Send: React.FunctionComponent<
     to: toAddress,
     privateKey,
     chainId: chain.chain_id,
-    value: parseEther(etherAmount.toString()),
+    value: ether,
     feeData,
   });
+
   return (
     <div style={{ padding: 10 }}>
       <BackTitle title={'Send'} onBack={() => setCurrentView('overview')} />
@@ -100,10 +100,13 @@ export const Send: React.FunctionComponent<
           <input
             className={styles.input}
             // type="number"3
-            value={etherAmount}
+            value={ether}
             onChange={(e) => {
               const { value } = e.target;
-              setEtherAmount(value);
+              const newValue = value.replace(/[^0-9.]/g, '');
+              const newEther = newValue === '' ? 0 : parseFloat(newValue);
+              setEther(newEther);
+              console.log(signedTxn);
             }}
           />
           <div className={styles['input-group-addon']}>{chain.symbol}</div>
@@ -113,7 +116,7 @@ export const Send: React.FunctionComponent<
       <a href={signedTxn} className={styles['flex-end']}>
         <button
           className={styles.button_white}
-          disabled={!toAddress || etherAmount === '0'}
+          disabled={!toAddress || ether === null}
           onClick={incrementNonce}
         >
           Send
