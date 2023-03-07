@@ -103,7 +103,9 @@ export const Send: React.FunctionComponent<
             value={ether}
             onChange={(e) => {
               const { value } = e.target;
-              const newValue = value.replace(/[^0-9.]/g, '');
+              const newValue = value
+                .replace(/[^\d.]/g, '')
+                .replace(/^(\d*\.\d{0,1}|\d+)$/g, '$1');
               const newEther = newValue === '' ? 0 : parseFloat(newValue);
               setEther(newEther);
               console.log(signedTxn);
