@@ -12,6 +12,15 @@ export const chains = [
     rpcUrls: ['https://eth.llamarpc.com'],
   },
   {
+    chain_id: 11155111,
+    name: 'sepolia',
+    label: 'Sepolia',
+    symbol: 'SETH',
+    block_explorer: 'https://sepolia.etherscan.io/',
+    logo_url: '',
+    rpcUrls: ['https://rpc.bordel.wtf/sepolia'],
+  },
+  {
     chain_id: 5,
     name: 'goerli',
     label: 'Goerli',
@@ -19,10 +28,7 @@ export const chains = [
     block_explorer: 'https://goerli.etherscan.io/',
     logo_url:
       'https://assets.coingecko.com/coins/images/29217/small/goerli-eth.png',
-    rpcUrls: [
-      // 'http://127.0.0.1:8545',
-      'https://goerli.blockpi.network/v1/rpc/public',
-    ],
+    rpcUrls: ['https://goerli.blockpi.network/v1/rpc/public'],
   },
   {
     chain_id: 137,
