@@ -37,11 +37,11 @@ export const signTransaction = async (
   const { privateKey, chainId, value, to, nonce, feeData } = args;
   console.log('\t', '📝 Arguments:', args);
   const wallet = new Wallet(privateKey);
-  console.log('\t', '              💳 Wallet:', wallet);
+  console.log('\t', '💳 Wallet:', wallet);
   let maxPriorityFeePerGas = feeData['maxPriorityFeePerGas']; // Recommended maxPriorityFeePerGas
   let maxFeePerGas = feeData['maxFeePerGas']; // Recommended maxFeePerGas
   console.log('\t', '⛽️ maxPriorityFeePerGas:', maxPriorityFeePerGas);
-  console.log('\t', '        ⛽️ maxFeePerGas:', maxFeePerGas);
+  console.log('\t', '⛽️ maxFeePerGas:', maxFeePerGas);
 
   if (!maxFeePerGas || !maxPriorityFeePerGas) {
     alert('gas estimate data missing');
@@ -70,9 +70,9 @@ export const signTransaction = async (
   };
 
   const signedTxn = await wallet.signTransaction(tx);
-  console.log('\t', '        🔐 Signed Tx:', signedTxn);
+  console.log('\t', '🔐 Signed Tx:', signedTxn);
   const textBody = encodeURIComponent(`${chainId},${signedTxn}`);
-  console.log('\t', '        📳 Text Body:', textBody);
+  console.log('\t', '📳 Text Body:', textBody);
   const isMac: boolean = navigator.userAgent.includes('AppleWebKit');
   const isIphone: boolean = navigator.userAgent.includes('iPhone');
   if (isMac || isIphone) {
@@ -81,7 +81,6 @@ export const signTransaction = async (
   if (navigator.userAgent.match(/Android/i)) {
     alert(`${navigator.userAgent} not supported`);
     return '';
-    // window.open('sms://' + phoneNumber + '/');
   }
   return '';
 };
