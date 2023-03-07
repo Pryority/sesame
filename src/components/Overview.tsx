@@ -48,17 +48,23 @@ export const BalanceCard: React.FunctionComponent<
     <div className={styles.balance_card}>
       <div className={styles.align_center}>
         <Link href={data.block_explorer} target="_blank">
-          <Image
-            src={data.currency_img_url}
-            width={40}
-            height={40}
-            alt={data.currency_name + 'img'}
-            className={styles.avatar}
-          />
+          {data.currency_img_url ? (
+            <Image
+              src={data.currency_img_url}
+              width={40}
+              height={40}
+              alt={data.currency_name + 'img'}
+              className={styles.avatar}
+            />
+          ) : null}
         </Link>
       </div>
       <div style={{ paddingLeft: 10, textAlign: 'right' }}>
-        <h2>{Math.floor(balance * 10 ** 12) / 10 ** 12}</h2>
+        <h2>
+          {typeof balance === 'number'
+            ? Math.floor(balance * 10 ** 12) / 10 ** 12
+            : 'Loading...'}
+        </h2>
         <p>{data.currency_name}</p>
       </div>
     </div>
