@@ -14,7 +14,7 @@ export const BackBtn: React.FunctionComponent<
       style={{ padding: 0 }}
       onClick={() => onBack()}
     >
-      <div className={''}>
+      <div className={'flex items-center'}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
