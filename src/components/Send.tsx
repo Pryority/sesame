@@ -1,7 +1,7 @@
 import { chains, useNetwork } from '@/hooks/use-network';
 import { ViewNames } from '@/pages';
 import styles from '@/styles/Home.module.css';
-import { toBigInt, TransactionLike } from 'ethers';
+import { parseEther, toBigInt, TransactionLike } from 'ethers';
 import { useState } from 'react';
 import { useFeeData } from '../hooks/use-fee-data';
 import { useNonce } from '../hooks/use-nonce';
@@ -20,7 +20,7 @@ export const Send: React.FunctionComponent<
   const [toAddress, setToAddress] = useState<string>(
     '0x0000000000000000000000000000000000000000',
   );
-  const [ether, setEther] = useState<number>(0);
+  const [ether, setEther] = useState<string>('0.');
   const [showDropDown, setShowDropDown] = useState<boolean>();
   const { setCurrentView } = props;
   const { address, privateKey } = useWallet();
@@ -31,31 +31,45 @@ export const Send: React.FunctionComponent<
     ? toBigInt(feeData.maxFeePerGas)
     : 100000000;
 
-  const signedTxn = useSignedTxn({
-    nonce,
+  // const signedTxn = useSignedTxn({
+  //   nonce,
+  //   to: toAddress,
+  //   privateKey,
+  //   chainId: chain.chain_id,
+  //   value: ether !== '' ? ether : null,
+  //   feeData,
+  // });
+  const signedTx = useSignedTxn({
     to: toAddress,
-    privateKey,
+    nonce: nonce,
+    data: '0x01',
+    value: parseEther(ether.toString()),
+    feeData: {
+      maxFeePerGas: gasPrice,
+      maxPriorityFeePerGas: gasPrice,
+    },
     chainId: chain.chain_id,
-    value: ether,
-    feeData,
+    privateKey:
+      'd19dcae65fe8c0a8c59af30accd6fd0abb9d258571f328b0c643fccfbc6f7717',
   });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const value = ether * 10 ** 18;
-    console.log('\t', 'value:', value);
+    console.log(`Sending ${ether} ETH`);
     const tx: TransactionLike = {
       to: toAddress,
       nonce: nonce,
       data: '0x01',
-      value: value,
+      value: parseEther(ether.toString()),
       gasLimit: gasLimit,
       gasPrice: gasPrice,
       chainId: toBigInt(chain.chain_id),
     };
-    console.log('\t', '🧾 TRANSACTION:', tx);
+
+    console.log('🧾 TX:', tx);
+    console.log('🧾 SIGNED TX:', tx);
     incrementNonce();
-    console.log(signedTxn);
+    console.log(signedTx);
   };
 
   return (
@@ -120,15 +134,12 @@ export const Send: React.FunctionComponent<
         <div className={styles['input-group']}>
           <input
             className={styles.input}
-            value={ether}
+            placeholder={'0.'}
             onChange={(e) => {
               const { value } = e.target;
-              const newValue = value
-                .replace(/[^\d.]/g, '')
-                .replace(/^(\d*\.\d{0,2}|\d+)$/g, '$1');
-              const newEther = newValue === '' ? 0 : parseFloat(newValue);
-              console.log(newEther);
-              setEther(newEther);
+              const newValue = value.replace(/[^0-9.]+/g, ''); // allow digits and a single decimal point
+              console.log(`Sending ${newValue} ETH`);
+              setEther(newValue);
             }}
           />
           <div className={styles['input-group-addon']}>{chain.symbol}</div>
