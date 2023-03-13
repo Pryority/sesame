@@ -22,7 +22,7 @@ export const Layout: React.FunctionComponent<
           setShowMenu={setShowMenu}
         />
       </div>
-      <div style={{ padding: 10 }}>
+      <div className="p-[10px]">
         {showMenu ? (
           <Menu setShowMenu={setShowMenu} />
         ) : (
