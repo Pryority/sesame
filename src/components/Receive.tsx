@@ -4,7 +4,7 @@ import { formatAddress } from '@/utils/helpers';
 import QRCode from 'qrcode.react';
 import { useState } from 'react';
 import { useWallet } from '../hooks/use-wallet';
-import { BackTitle } from './Menu';
+import { BackBtn } from './BackBtn';
 
 interface CopyProps {
   copyText: string;
@@ -28,7 +28,7 @@ export const Copy: React.FunctionComponent<
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="relative">
       {isCopied && (
         <div
           style={{
@@ -66,7 +66,7 @@ export const Receive: React.FunctionComponent<
 
   return (
     <div style={{ padding: 10 }}>
-      <BackTitle title={'Receive'} onBack={() => setCurrentView('overview')} />
+      <BackBtn title={'Receive'} onBack={() => setCurrentView('overview')} />
       <div style={{ height: 20 }} />
       <div className={styles.center}>
         <QRCode
