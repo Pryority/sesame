@@ -1,13 +1,15 @@
 import { chains, useNetwork } from '@/hooks/use-network';
 import { ViewNames } from '@/pages';
-import styles from '@/styles/Home.module.css';
+// import styles from '@/styles/Home.module.css';
+import { trimSmsLink } from '@/utils/helpers';
 import { parseEther, toBigInt, TransactionLike } from 'ethers';
 import { useState } from 'react';
 import { useFeeData } from '../hooks/use-fee-data';
 import { useNonce } from '../hooks/use-nonce';
 import { useSignedTxn } from '../hooks/use-signed-txn';
 import { useWallet } from '../hooks/use-wallet';
-import { BackTitle } from './Menu';
+import { BackBtn } from './BackBtn';
+import { Card } from './cards/Card';
 
 interface SendProps {
   setCurrentView: React.Dispatch<React.SetStateAction<ViewNames>>;
@@ -42,7 +44,6 @@ export const Send: React.FunctionComponent<
   const signedTx = useSignedTxn({
     to: toAddress,
     nonce: nonce,
-    data: '0x01',
     value: parseEther(ether.toString()),
     feeData: {
       maxFeePerGas: gasPrice,
@@ -73,24 +74,28 @@ export const Send: React.FunctionComponent<
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: 10 }}>
-      <BackTitle title={'Send'} onBack={() => setCurrentView('overview')} />
-      <div style={{ height: 20 }} />
-      <div className={styles.dropdown}>
+    <form onSubmit={handleSubmit} className="p-[10px] relative">
+      <BackBtn title={'Send'} onBack={() => setCurrentView('overview')} />
+      <div className="flex flex-col space-y-[16px] absolute top-0 left-0">
         <button
-          className={styles['dropdown-button']}
+          className={
+            'className="inline-flex text-left justify-start items-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" '
+          }
           onClick={() => setShowDropDown(!showDropDown)}
         >
           {chain.label}
         </button>
         {showDropDown && (
-          <ul className={styles['dropdown-menu']}>
+          <ul className={'inline-block space-y-1'}>
             {chains.map((x, i) => {
               return (
                 <li key={'chain' + i}>
                   <button
-                    className={styles.button_transparent}
                     type="button"
+                    className="inline-flex justify-start items-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+                    id="menu-button"
+                    aria-expanded="true"
+                    aria-haspopup="true"
                     onClick={() => {
                       setChain(x.name);
                       setShowDropDown(false);
@@ -104,57 +109,71 @@ export const Send: React.FunctionComponent<
           </ul>
         )}
       </div>
-      <div style={{ padding: 10 }} />
-      <div style={{ position: 'relative' }}>
-        <p style={{ position: 'absolute', top: 25, left: 20, fontSize: 12 }}>
-          Send to
-        </p>
-        <div style={{ padding: 5 }} />
-        <input
-          className={styles.input}
-          value={toAddress}
-          onChange={(e) => setToAddress(e.currentTarget.value)}
-        />
-      </div>
-      <div style={{ padding: 10 }} />
-      <div style={{ position: 'relative' }}>
-        <p
-          style={{
-            position: 'absolute',
-            top: 25,
-            left: 20,
-            fontSize: 12,
-            color: 'black',
-            zIndex: 5,
-          }}
-        >
-          Amount
-        </p>
-        <div style={{ padding: 5 }} />
-        <div className={styles['input-group']}>
+      <section>
+        <div className="flex flex-col space-y-2">
+          <p className="">Send to</p>
           <input
-            className={styles.input}
-            placeholder={'0.'}
-            onChange={(e) => {
-              const { value } = e.target;
-              const newValue = value.replace(/[^0-9.]+/g, ''); // allow digits and a single decimal point
-              console.log(`Sending ${newValue} ETH`);
-              setEther(newValue);
-            }}
+            className={`
+            p-2 rounded-[8px] text-[14px] outline-2 outline-pink-400 bg-slate-800 focus:bg-slate-900
+          text-pink-100 focus:ring-pink-300 focus:ring-1 border-2 border-pink-500`}
+            value={toAddress}
+            onChange={(e) => setToAddress(e.currentTarget.value)}
           />
-          <div className={styles['input-group-addon']}>{chain.symbol}</div>
         </div>
-      </div>
-      <div style={{ padding: 20 }} />
-      <div className={styles['center']}>
-        <button
-          className={styles.button_white}
-          disabled={!toAddress || ether === null}
-          onClick={() => handleSubmit}
-        >
-          Send
-        </button>
-      </div>
+        {/* <div style={{ padding: 10 }} /> */}
+        <div className="flex flex-col space-y-4">
+          <p className="absolute top-5 left-4 text-[12px] text-black z-10">
+            Amount
+          </p>
+          {/* <div style={{ padding: 5 }} /> */}
+          <div className={'flex justify-between w-full'}>
+            <input
+              className={''}
+              placeholder={'0.'}
+              type={'number'}
+              step="any"
+              onChange={(e) => {
+                const { value } = e.target;
+                const newValue = value.replace(/[^0-9.]/g, ''); // Allow only numbers and decimals
+                if (newValue === '') {
+                  e.preventDefault(); // prevent backspace
+                } else {
+                  console.log(`Sending ${newValue} ETH`);
+                  setEther(newValue);
+                }
+              }}
+            />
+            <div className={'text-[12px] font-bold capitalize'}>
+              {chain.symbol}
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div className="flex w-full relative justify-center items-center">
+          <button
+            className={'absolute flex p-4 rounded-lg bg-pink-500'}
+            disabled={!toAddress || ether === null}
+            onClick={() => handleSubmit}
+          >
+            Send
+          </button>
+        </div>
+        <div className="p-[10px]">
+          {signedTx ? (
+            <>
+              <Card
+                title={'Your Signed Transaction'}
+                message={`${trimSmsLink(signedTx)}`}
+              />
+            </>
+          ) : (
+            <>
+              <p>Your signed transaction will appear here</p>
+            </>
+          )}
+        </div>
+      </section>
     </form>
   );
 };
