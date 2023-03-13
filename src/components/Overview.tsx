@@ -1,10 +1,7 @@
 import { ViewNames } from '@/pages';
-import styles from '@/styles/Home.module.css';
-import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
-import { useBalance } from '../hooks/use-balance';
-import { ChainName, chains } from '../hooks/use-network';
+import { chains } from '../hooks/use-network';
+import { BalanceCard } from './cards/BalanceCard';
 
 interface SendReceiveProps {
   setCurrentView: React.Dispatch<React.SetStateAction<ViewNames>>;
@@ -15,59 +12,24 @@ export const SendReceive: React.FunctionComponent<
 > = (props) => {
   const { setCurrentView } = props;
   return (
-    <div className={styles.align_center}>
-      <button className={styles.button} onClick={() => setCurrentView('send')}>
+    <section className="flex justify-center space-x-1">
+      <button
+        className={
+          'min-w-[100px] h-[40px] bg-amber-300 border border-amber-200 hover:bg-amber-400 text-amber-900 transition-all ease-in-out duration-150 rounded-full'
+        }
+        onClick={() => setCurrentView('send')}
+      >
         Send
       </button>
-      <div style={{ paddingLeft: 40 }} />
       <button
-        className={styles.button}
+        className={
+          'min-w-[100px] h-[40px] bg-lime-300 border border-lime-200 hover:bg-lime-400 text-lime-900 transition-all ease-in-out duration-150 rounded-full'
+        }
         onClick={() => setCurrentView('receive')}
       >
         Receive
       </button>
-    </div>
-  );
-};
-
-interface BalanceCardProps {
-  data: {
-    networkName: ChainName;
-    currency_name: string;
-    currency_img_url: string;
-    block_explorer: string;
-  };
-}
-
-export const BalanceCard: React.FunctionComponent<
-  React.PropsWithChildren<BalanceCardProps>
-> = (props) => {
-  const { data } = props;
-  const balance = useBalance(data.networkName);
-  return (
-    <div className={styles.balance_card}>
-      <div className={styles.align_center}>
-        <Link href={data.block_explorer} target="_blank">
-          {data.currency_img_url ? (
-            <Image
-              src={data.currency_img_url}
-              width={40}
-              height={40}
-              alt={data.currency_name + 'img'}
-              className={styles.avatar}
-            />
-          ) : null}
-        </Link>
-      </div>
-      <div style={{ paddingLeft: 10, textAlign: 'right' }}>
-        <h2>
-          {typeof balance === 'number'
-            ? Math.floor(balance * 10 ** 12) / 10 ** 12
-            : 'Loading...'}
-        </h2>
-        <p>{data.currency_name}</p>
-      </div>
-    </div>
+    </section>
   );
 };
 
@@ -80,7 +42,7 @@ export const Overview: React.FunctionComponent<
 > = (props) => {
   const { setCurrentView } = props;
   return (
-    <div style={{ paddingTop: 10 }}>
+    <div>
       <SendReceive setCurrentView={setCurrentView} />
       {chains.map((chain) => {
         return (
