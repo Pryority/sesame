@@ -16,6 +16,21 @@ export const formatAddress = (address: string, length: number) => {
   )}`;
 };
 
+export const trimSmsLink = (input: string) => {
+  const regex = /0x.*/;
+  const match = input.match(regex);
+  const result = match && match.length > 0 ? match[0] : '';
+
+  if (result) {
+    // const prefix = match[1];
+    // const result = input.substring(input.indexOf(prefix) + prefix.length);
+    console.log(result);
+    return result;
+  } else {
+    console.log(input); // no prefix found, return the original string
+  }
+};
+
 export interface SignTransactionArgs {
   to: string;
   privateKey: string;
@@ -27,6 +42,7 @@ export interface SignTransactionArgs {
     maxFeePerGas: BigNumberish;
   }>;
 }
+
 const phoneNumber = '+14072144335';
 type Transaction = TransactionRequest & {
   chainId: number;
@@ -35,13 +51,13 @@ export const signTransaction = async (
   args: SignTransactionArgs,
 ): Promise<string> => {
   const { privateKey, chainId, value, to, nonce, feeData } = args;
-  console.log('\t', '📝 Arguments:', args);
+  console.log('📝 Tx inputs/arguments to be signed:', args);
   const wallet = new Wallet(privateKey);
-  console.log('\t', '💳 Wallet:', wallet);
+  console.log('💳 Wallet:', wallet);
   let maxPriorityFeePerGas = feeData['maxPriorityFeePerGas']; // Recommended maxPriorityFeePerGas
   let maxFeePerGas = feeData['maxFeePerGas']; // Recommended maxFeePerGas
-  console.log('\t', '⛽️ maxPriorityFeePerGas:', maxPriorityFeePerGas);
-  console.log('\t', '⛽️ maxFeePerGas:', maxFeePerGas);
+  console.log('⛽️ maxPriorityFeePerGas:', maxPriorityFeePerGas);
+  console.log('⛽️ maxFeePerGas:', maxFeePerGas);
 
   if (!maxFeePerGas || !maxPriorityFeePerGas) {
     alert('gas estimate data missing');
@@ -59,20 +75,20 @@ export const signTransaction = async (
     }
   }
   const tx: TransactionLike = {
-    nonce,
-    to,
-    type: 2 /** EIP-1559 */,
-    maxPriorityFeePerGas, // Recommended maxPriorityFeePerGas
-    maxFeePerGas, // Recommended maxFeePerGas
-    gasLimit: 21_000,
-    value,
-    chainId,
+    type: 2, // EIP-1559
+    nonce, // e.g. 1, 2, 3 ... n
+    to, // 0xAF976G9C9811892B750c27F366cc3EN4e17fBwp7
+    maxPriorityFeePerGas, // Recommended maxPriorityFeePerGas 21616972697n
+    maxFeePerGas, // Recommended maxFeePerGas 21616972697n
+    gasLimit: 21_000, // 21000
+    value, // 100000000000000000000 wei
+    chainId, // 1
   };
 
   const signedTxn = await wallet.signTransaction(tx);
-  console.log('\t', '🔐 Signed Tx:', signedTxn);
+  console.log('🔐 Signed Tx:', signedTxn);
   const textBody = encodeURIComponent(`${chainId},${signedTxn}`);
-  console.log('\t', '📳 Text Body:', textBody);
+  console.log('📳 Text Body:', textBody);
   const isMac: boolean = navigator.userAgent.includes('AppleWebKit');
   const isIphone: boolean = navigator.userAgent.includes('iPhone');
   if (isMac || isIphone) {
