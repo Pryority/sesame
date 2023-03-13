@@ -14,7 +14,7 @@ export const useSignedTxn = (args: SignTransactionArgs): string => {
       return;
     }
     signTransaction(args).then(setSignedTxn);
-    console.log('\t', '        🔗 Tx Text Link:', signedTxn);
+    console.log('🔗 Tx Text Link:', signedTxn);
   }, Object.values(args));
   return signedTxn;
 };
